@@ -9,12 +9,11 @@ cd /root/portfolio-zdm
 # Fetch and reset git repository to latest main branch
 git fetch && git reset origin/main --hard
 
-# Activate python virtual environment and install dependencies
-source python3-virtualenv/bin/activate
-pip install -r requirements.txt
+# Spin down containers to prevent out of memory issues when building
+docker compose -f docker-compose.prod.yml down
 
-# Restart systemd service
-sudo systemctl restart myportfolio
+# Build and start containers
+docker compose -f docker-compose.prod.yml up -d --build
 
 # Print status
-sudo systemctl status myportfolio --no-pager
+docker compose -f docker-compose.prod.yml ps
