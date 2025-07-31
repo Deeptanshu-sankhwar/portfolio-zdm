@@ -6,10 +6,30 @@ services:
     restart: always
     env_file:
       - .env
-    ports:
-      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+    expose:
+      - "5000"
     depends_on:
       - mysql
+
+  nginx:
+    image: jonasal/nginx-certbot:latest
+    restart: unless-stopped
+    environment:
+      - CERTBOT_EMAIL=${CERTBOT_EMAIL}
+      - DOMAINS=deeptanshu-portfolio.duckdns.org
+      - DHPARAM_SIZE=2048
+      - RSA_KEY_SIZE=2048
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./user_conf.d:/etc/nginx/conf.d:ro
+      - ./app/static:/usr/share/nginx/html/static:ro
+      - nginx_secrets:/etc/letsencrypt
+    depends_on:
+      - myportfolio
 
   mysql:
     image: mariadb:10.5
@@ -25,4 +45,5 @@ services:
       - mydatabase:/var/lib/mysql
 
 volumes:
-  mydatabase: 
+  mydatabase:
+  nginx_secrets: 
