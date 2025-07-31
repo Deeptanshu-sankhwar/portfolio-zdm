@@ -181,3 +181,12 @@ def get_time_line_post():
 @app.route('/timeline')
 def timeline():
     return render_template('timeline.html', title="Timeline", url=os.getenv("URL"), nav_items=get_nav_data('timeline'))
+
+@app.route('/health')
+def health():
+    try:
+        # Test database connection
+        TimelinePost.select().limit(1).execute()
+        return {"status": "healthy", "database": "connected"}, 200
+    except Exception as e:
+        return {"status": "unhealthy", "error": str(e)}, 503

@@ -2,6 +2,15 @@
 
 Welcome to the MLH Fellowship! During Week 1, you'll be using Flask to build a portfolio site. This site will be the foundation for activities we do in future weeks so spend time this week making it your own and reflect your personality!
 
+## New Features Added
+
+This portfolio now includes:
+- **NGINX Reverse Proxy** with SSL/HTTPS support (using `user_conf.d/myportfolio.conf`)
+- **Docker Containerization** for easy deployment
+- **Production-ready Configuration** with security best practices
+- **Health Check Endpoints** for monitoring
+- **Automated SSL Certificate Management** using Let's Encrypt
+
 ## Tasks
 
 Once you've got your portfolio downloaded and running using the instructions below, you should attempt to complete the following tasks.
@@ -29,6 +38,172 @@ For each of these tasks, you should create an [Issue](https://docs.github.com/en
 - [x] Create a new page to display hobbies.
 - [x] Add a menu bar that dynamically displays other pages in the app
 
+### Production Engineering Tasks
+- [x] Add NGINX reverse proxy configuration
+- [x] Containerize the application with Docker
+- [x] Add SSL/HTTPS support with automated certificate management
+- [x] Implement health checks and monitoring endpoints
+- [x] Optimize Dockerfile for production deployment
+- [x] Add deployment automation scripts
+
+## 🐳 Quick Start with Docker (Recommended)
+
+The easiest way to run this portfolio is using our deployment script:
+
+```bash
+# Make the script executable (first time only)
+chmod +x deploy.sh
+
+# Start development environment
+./deploy.sh dev
+
+# Or start production environment
+./deploy.sh prod
+
+# Run tests
+./deploy.sh test
+
+# Stop all services
+./deploy.sh stop
+```
+
+Your portfolio will be available at:
+- **HTTP**: http://deeptanshu-portfolio.duckdns.org
+- **HTTPS**: https://deeptanshu-portfolio.duckdns.org (after SSL setup)
+
+## 📋 Prerequisites
+
+- Docker and Docker Compose installed
+- Git for version control
+
+## 🔧 Manual Setup
+
+### Environment Configuration
+
+1. Copy the example environment file:
+```bash
+cp example.env .env
+```
+
+2. Edit `.env` with your configuration:
+```env
+URL=deeptanshu-portfolio.duckdns.org
+MYSQL_HOST=mysql
+MYSQL_USER=portfolio_user
+MYSQL_PASSWORD=portfolio_password
+MYSQL_DATABASE=portfolio_db
+MYSQL_ROOT_PASSWORD=root_password
+CERTBOT_EMAIL=your-email@example.com
+```
+
+### Development Environment
+
+```bash
+# Start all services
+docker-compose up --build -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
+### Production Environment
+
+```bash
+# Start production services
+docker-compose -f docker-compose.prod.yml up --build -d
+
+# View logs
+docker-compose -f docker-compose.prod.yml logs -f
+
+# Stop services
+docker-compose -f docker-compose.prod.yml down
+```
+
+## 🧪 Local Development (Without Docker)
+
+If you prefer to run locally without Docker:
+
+### Installation
+
+Make sure you have Python 3.11+ and pip installed.
+
+Create and activate virtual environment:
+```bash
+python -m venv python3-virtualenv
+source python3-virtualenv/bin/activate  # On Windows: python3-virtualenv\Scripts\activate
+```
+
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+### Usage
+
+Create a .env file using the example.env template with appropriate local settings.
+
+Start Flask development server:
+```bash
+export FLASK_ENV=development
+flask run
+```
+
+You should get a response like this in the terminal:
+```
+❯ flask run
+ * Environment: development
+ * Debug mode: on
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+```
+
+You'll now be able to access the website at `localhost:5000` or `127.0.0.1:5000` in the browser!
+
+## 🏗️ Architecture
+
+This portfolio uses a modern containerized architecture:
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│                 │    │                  │    │                 │
+│  NGINX Proxy    │    │   Flask App      │    │   MySQL DB      │
+│  (Port 80/443)  │────│   (Port 5000)    │────│   (Port 3306)   │
+│                 │    │                  │    │                 │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+```
+
+- **NGINX**: Reverse proxy with SSL termination and static file serving
+- **Flask**: Python web application with Jinja2 templating
+- **MySQL**: Database for timeline posts and user data
+- **Docker**: Containerization for consistent deployments
+
+## 🔒 Security Features
+
+- Non-root user in Docker containers
+- SSL/HTTPS with automatic certificate renewal
+- Environment variable configuration
+- Health check endpoints
+- Security headers via NGINX
+
+## 📊 Monitoring
+
+Health check endpoints:
+- **Application Health**: `GET /health`
+- **NGINX Health**: `GET /health` (returns 200 OK)
+
+## 🧪 Testing
+
+Run the test suite:
+```bash
+./run_test.sh
+```
+
+Or with the deployment script:
+```bash
+./deploy.sh test
+```
 
 ## Getting Started
 
@@ -57,46 +232,13 @@ For each of these tasks, you should create an [Issue](https://docs.github.com/en
 - Deeptanshu: Added personal work experiences
 - Deeptanshu: Added personal education
 - Deeptanshu: Added personal Hobbies
-## Installation
-
-Make sure you have python3 and pip installed
-
-Create and activate virtual environment using virtualenv
-```bash
-$ python -m venv python3-virtualenv
-$ source python3-virtualenv/bin/activate
-```
-
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install all dependencies!
-
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-Create a .env file using the example.env template (make a copy using the variables inside of the template)
-
-Start flask development server
-```bash
-$ export FLASK_ENV=development
-$ flask run
-```
-
-You should get a response like this in the terminal:
-```
-❯ flask run
- * Environment: development
- * Debug mode: on
- * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
-```
-
-You'll now be able to access the website at `localhost:5000` or `127.0.0.1:5000` in the browser! 
-
-*Note: The portfolio site will only work on your local machine while you have it running inside of your terminal. We'll go through how to host it in the cloud in the next few weeks!* 
 
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
+
+## 📝 License
+
+This project is part of the MLH Fellowship Production Engineering track.
