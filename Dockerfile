@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     pkg-config \
     default-libmysqlclient-dev \
+    libffi-dev \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
@@ -23,7 +24,8 @@ WORKDIR /myportfolio
 
 # Copy and install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
