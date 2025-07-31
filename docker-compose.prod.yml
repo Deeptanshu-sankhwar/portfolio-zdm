@@ -14,20 +14,14 @@ services:
       - mysql
 
   nginx:
-    image: jonasal/nginx-certbot:latest
+    image: nginx:alpine
     restart: unless-stopped
-    environment:
-      - CERTBOT_EMAIL=${CERTBOT_EMAIL}
-      - DOMAINS=deeptanshu-portfolio.duckdns.org
-      - DHPARAM_SIZE=2048
-      - RSA_KEY_SIZE=2048
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./user_conf.d:/etc/nginx/conf.d:ro
       - ./app/static:/usr/share/nginx/html/static:ro
-      - nginx_secrets:/etc/letsencrypt
     depends_on:
       - myportfolio
 
